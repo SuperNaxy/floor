@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>忠國塑膠地板快速估價器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        #suggestedPacks {
+            border: none;
+            background-color: transparent;
+            width: 100px; /* 设置建议耗材数量输入框的宽度 */
+        }
+    </style>
+</head>
+<body>
+    <h1>忠國塑膠地板快速估價器</h1>
+    <div class="calculator">
+        <div class="input-group">
+            <label for="totalSquareFeet">總共幾平方英尺(非必填):</label>
+            <input type="number" id="totalSquareFeet" value="0">
+        </div>
+        <div class="input-group">
+            <label for="suggestedPacks">建議耗材數量:</label>
+            <input type="text" id="suggestedPacks" readonly>
+        </div>
+        <div class="input-group">
+            <label for="materialPacks">總共需要幾包耗材:</label>
+            <input type="number" id="materialPacks" value="0">
+        </div>
+        <div class="input-group">
+            <label for="floors">樓層:</label>
+            <input type="number" id="floors" value="0">
+        </div>
+        <div class="input-group">
+            <label for="advancedConstruction">房間+廳數量(四角落或四階樓梯視為一房):</label>
+            <input type="number" id="advancedConstruction" value="0">
+        </div>
+        <div class="input-group">
+            <label for="complexConstruction">幾處複雜處:</label>
+            <input type="number" id="complexConstruction" value="0">
+        </div>
+
+        <button onclick="calculateFormula()">計算</button><br><br>
+
+        <div id="result">估價: $<span id="resultValue"></span></div>
+    </div>
+    <script>
+        // 獲取輸入和結果元素
+        const totalSquareFeet = document.getElementById('totalSquareFeet');
+        const suggestedPacks = document.getElementById('suggestedPacks');
+        const materialPacks = document.getElementById('materialPacks');
+        const floors = document.getElementById('floors');
+        const advancedConstruction = document.getElementById('advancedConstruction');
+        const complexConstruction = document.getElementById('complexConstruction');
+        const resultValue = document.getElementById('resultValue');
+
+        // 公式計算
+        function calculateFormula() {
+            const packs = parseFloat(materialPacks.value);
+            const floor = parseFloat(floors.value);
+            const advanced = parseFloat(advancedConstruction.value);
+            const complex = parseFloat(complexConstruction.value);
+
+            let result = 0;
+
+            // 如果樓層不為0，則計算樓層的加值
+            let floorExtra = 0;
+            if (floor > 0) {
+                if (packs <= 30) {
+                    floorExtra = 30;
+                } else if (packs >=31) {
+                    floorExtra = 60;
+                }
+            }
+
+            // 計算結果
+            result = (packs * 25 ) + (advanced * 30) + (complex * 20) + (floor * packs ) + 50 + (floor > 0 ? floorExtra : 0);
+
+            resultValue.textContent = result.toFixed(2); // 保留兩位小數
+
+            const squareFeet = parseFloat(totalSquareFeet.value);
+            suggestedPacks.value = Math.ceil(squareFeet / 20); // 更新建議
+        }
+    </script>
+</body>
+</html>
